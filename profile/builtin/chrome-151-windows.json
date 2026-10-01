@@ -1,0 +1,99 @@
+{
+  "name": "chrome-151-windows",
+  "description": "Chrome 151 on Windows (BoringSSL, X25519MLKEM768, ECH GREASE, shuffled extensions)",
+  "tls": {
+    "raw_client_hello": "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",
+    "permute": true
+  },
+  "http2": {
+    "settings": [
+      {
+        "id": 1,
+        "value": 65536
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 6291456
+      },
+      {
+        "id": 6,
+        "value": 262144
+      }
+    ],
+    "connection_window_update": 15663105,
+    "pseudo_order": [
+      ":method",
+      ":authority",
+      ":scheme",
+      ":path"
+    ],
+    "header_priority": {
+      "stream_dep": 0,
+      "exclusive": true,
+      "weight": 255
+    }
+  },
+  "headers": [
+    [
+      "sec-ch-ua",
+      "\"Not=A?Brand\";v=\"99\", \"Google Chrome\";v=\"151\", \"Chromium\";v=\"151\""
+    ],
+    [
+      "sec-ch-ua-mobile",
+      "?0"
+    ],
+    [
+      "sec-ch-ua-platform",
+      "\"Windows\""
+    ],
+    [
+      "user-agent",
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+    ],
+    [
+      "accept",
+      "*/*"
+    ],
+    [
+      "accept-encoding",
+      "gzip, deflate, br, zstd"
+    ],
+    [
+      "accept-language",
+      "en-US,en;q=0.9"
+    ]
+  ],
+  "header_order": [
+    "cache-control",
+    "sec-ch-ua",
+    "sec-ch-ua-arch",
+    "sec-ch-ua-bitness",
+    "sec-ch-ua-full-version-list",
+    "sec-ch-ua-mobile",
+    "sec-ch-ua-model",
+    "sec-ch-ua-platform",
+    "sec-ch-ua-platform-version",
+    "sec-ch-ua-wow64",
+    "upgrade-insecure-requests",
+    "user-agent",
+    "content-type",
+    "content-length",
+    "accept",
+    "origin",
+    "sec-fetch-site",
+    "sec-fetch-mode",
+    "sec-fetch-user",
+    "sec-fetch-dest",
+    "referer",
+    "if-none-match",
+    "if-modified-since",
+    "accept-encoding",
+    "accept-language",
+    "cookie",
+    "priority"
+  ]
+}

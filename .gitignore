@@ -1,0 +1,11 @@
+*.exe
+*.dll
+*.so
+*.dylib
+*.h
+!ffi/*.h
+.venv/
+__pycache__/
+*.egg-info/
+build/
+dist/
