@@ -41,7 +41,7 @@ async with spark_tls.AsyncSession("ios") as s:
 | name | aliases | client |
 |---|---|---|
 | `chrome-151-windows` | `chrome`, `chrome-latest` | Chrome 151, Windows |
-| `ios-26` | `ios`, `ios-latest`, `safari-ios` | iOS 26 system stack (Safari, WKWebView, NSURLSession apps) |
+| `ios-safari-26` | `ios`, `ios-safari`, `safari-ios`, `ios-latest` | Safari on iOS 26 (same TLS as WKWebView / NSURLSession apps) |
 
 **Copy TLS from Cloak:** right-click any flow → *Copy TLS (Spark-Tls)*. You get one
 string (`spark1:…`, ~800 chars) holding that client's ClientHello, HTTP/2 opening and

@@ -15,11 +15,10 @@ var aliases = map[string]string{
 	"chrome":        "chrome-151-windows",
 	"chrome-151":    "chrome-151-windows",
 	"chrome-latest": "chrome-151-windows",
-	"ios":           "ios-26",
-	"ios-latest":    "ios-26",
-	"safari-ios":    "ios-26",
-	"ios-safari":    "ios-26",
-	"ios-safari-26": "ios-26",
+	"ios":           "ios-safari-26",
+	"ios-latest":    "ios-safari-26",
+	"safari-ios":    "ios-safari-26",
+	"ios-safari":    "ios-safari-26",
 }
 
 func init() {

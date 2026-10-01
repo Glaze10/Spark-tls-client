@@ -50,9 +50,9 @@ PROFILES = {
         ],
         "header_order": CHROME_ORDER,
     },
-    "ios-26": {
+    "ios-safari-26": {
         "hello": "apple-ios-device",
-        "description": "Apple iOS 26 system networking stack (Safari, WKWebView, NSURLSession apps)",
+        "description": "Safari on iOS 26 (Apple's networking stack, same TLS as WKWebView and NSURLSession apps)",
         "permute": False,
         "http2": {
             "settings": [{"id": 2, "value": 0}, {"id": 3, "value": 100},
