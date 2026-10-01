@@ -47,6 +47,7 @@ async with spark_tls.AsyncSession("ios") as s:
 | `IOS-26-brave` | `brave-ios` | Brave on iOS 26 |
 | `IOS-26-duckduckgo` | `duckduckgo-ios`, `ddg-ios` | DuckDuckGo browser on iOS 26 |
 | `IOS-26-edge-153` | `edge-ios` | Edge 153 on iOS 26 |
+| `IOS-26-bing-34` | `bing-ios` | Microsoft Bing app 34 on iOS 26 |
 | `IOS-26-webview-apple` | `ios-webview` | In-app webview on iOS 26 (WKWebView). Native TLS + HTTP/2 (not Safari's), webview user-agent. Seen in Uber and DoorDash login pages |
 | `IOS-26-native-webkit-tls` | `ios-webkit-tls` | Native iOS 26 request using the Safari/WebKit TLS (20 ciphers) with native HTTP/2. Seen from HelloFresh's Iterable SDK. No default user-agent |
 | `IOS-26-native-apple` | `ios-native`, `native-ios`, `ios-app` | Native iOS 26 app (NSURLSession/CFNetwork). No default user-agent: set your app's |

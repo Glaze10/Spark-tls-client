@@ -54,6 +54,10 @@ TOKENS = {
     # Browser apps on iOS. All five share one fingerprint - Safari's 20-cipher TLS
     # with the native HTTP/2 opening, i.e. IOS-26-native-webkit-tls - and differ
     # only in headers, so each keeps the headers and order it was captured with.
+    "IOS-26-bing-34": {
+        "description": "Microsoft Bing app 34 on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
+        "use_captured_headers": True,
+    },
     "IOS-26-chrome-155": {
         "description": "Chrome 155 on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
         "use_captured_headers": True,
