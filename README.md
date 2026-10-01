@@ -42,6 +42,7 @@ async with spark_tls.AsyncSession("ios") as s:
 |---|---|---|
 | `chrome-151` | `chrome`, `chrome-latest` | Chrome 151 (Windows; other platforms will be named, e.g. `chrome-151-android`) |
 | `ios-safari-26` | `ios`, `ios-safari`, `safari-ios`, `ios-latest` | Safari on iOS 26 |
+| `IOS-26-webview-apple` | `ios-webview` | In-app webview on iOS 26 (WKWebView). Native TLS + HTTP/2 (not Safari's), webview user-agent. Seen in Uber and DoorDash login pages |
 | `IOS-26-native-webkit-tls` | `ios-webkit-tls` | Native iOS 26 request using the Safari/WebKit TLS (20 ciphers) with native HTTP/2. Seen from HelloFresh's Iterable SDK. No default user-agent |
 | `IOS-26-native-apple` | `ios-native`, `native-ios`, `ios-app` | Native iOS 26 app (NSURLSession/CFNetwork). No default user-agent: set your app's |
 

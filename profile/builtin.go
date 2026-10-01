@@ -18,6 +18,7 @@ var aliases = map[string]string{
 	// still inherit our Chrome headers.
 	"chrome-151-windows": "chrome-151",
 	"ios-webkit-tls":     "ios-26-native-webkit-tls",
+	"ios-webview":        "ios-26-webview-apple",
 	"ios":                "ios-safari-26",
 	"ios-latest":         "ios-safari-26",
 	"safari-ios":         "ios-safari-26",

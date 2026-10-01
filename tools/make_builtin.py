@@ -51,6 +51,23 @@ PROFILES = {
 # Headers are replaced with app-neutral defaults: every app sets its own
 # user-agent, so none is shipped.
 TOKENS = {
+    # An in-app webview (WKWebView): Uber's account.uber.com login page. On iOS 26
+    # webviews use the app's native TLS and HTTP/2, not Safari's; DoorDash's login
+    # webview matched too. Headers are in the order the webview sent them.
+    "IOS-26-webview-apple": {
+        "description": "In-app webview on iOS 26 (WKWebView): native TLS + HTTP/2, webview user-agent",
+        "headers": [
+            ["accept", "*/*"],
+            ["accept-language", "en-US,en;q=0.9"],
+            ["accept-encoding", "gzip, deflate, br"],
+            ["user-agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"],
+        ],
+        "header_order": [
+            "content-type", "accept", "sec-fetch-site", "priority", "accept-language",
+            "cache-control", "sec-fetch-mode", "accept-encoding", "origin", "content-length",
+            "user-agent", "referer", "sec-fetch-dest", "cookie",
+        ],
+    },
     # Real Safari, browsing m.youtube.com. Safari on iOS 26 freezes the OS version
     # in its user-agent at 18_6; only Version/26.0 shows the real release.
     "ios-safari-26": {
