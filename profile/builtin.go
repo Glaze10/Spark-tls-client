@@ -12,16 +12,19 @@ var builtinFS embed.FS
 var builtin = map[string]*Profile{}
 
 var aliases = map[string]string{
-	"chrome":        "chrome-151-windows",
-	"chrome-151":    "chrome-151-windows",
-	"chrome-latest": "chrome-151-windows",
-	"ios":           "ios-safari-26",
-	"ios-latest":    "ios-safari-26",
-	"safari-ios":    "ios-safari-26",
-	"ios-safari":    "ios-safari-26",
-	"ios-native":    "ios-26-native-apple",
-	"native-ios":    "ios-26-native-apple",
-	"ios-app":       "ios-26-native-apple",
+	"chrome":        "chrome-151",
+	"chrome-latest": "chrome-151",
+	// Cloak names its Chrome preset this way; kept so Cloak exports based on it
+	// still inherit our Chrome headers.
+	"chrome-151-windows": "chrome-151",
+	"ios-webkit-tls":     "ios-26-native-webkit-tls",
+	"ios":                "ios-safari-26",
+	"ios-latest":         "ios-safari-26",
+	"safari-ios":         "ios-safari-26",
+	"ios-safari":         "ios-safari-26",
+	"ios-native":         "ios-26-native-apple",
+	"native-ios":         "ios-26-native-apple",
+	"ios-app":            "ios-26-native-apple",
 }
 
 func init() {

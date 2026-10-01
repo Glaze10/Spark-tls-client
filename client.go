@@ -24,7 +24,7 @@ import (
 )
 
 type Options struct {
-	// Profile is a built-in name ("chrome", "ios", "chrome-151-windows"), or a path
+	// Profile is a built-in name ("chrome", "ios", "chrome-151"), or a path
 	// to a profile JSON (Spark-Tls or Cloak export).
 	Profile string
 	// ProfileJSON, when set, is used instead of Profile.

@@ -28,9 +28,9 @@ APPLE_ORDER = [
 ]
 
 PROFILES = {
-    "chrome-151-windows": {
+    "chrome-151": {
         "hello": "chrome-151-windows",
-        "description": "Chrome 151 on Windows (BoringSSL, X25519MLKEM768, ECH GREASE, shuffled extensions)",
+        "description": "Chrome 151 (Windows)",
         "permute": True,
         "http2": {
             "settings": [{"id": 1, "value": 65536}, {"id": 2, "value": 0},
@@ -76,6 +76,18 @@ PROFILES = {
 # Headers are replaced with app-neutral defaults: every app sets its own
 # user-agent, so none is shipped.
 TOKENS = {
+    "IOS-26-native-webkit-tls": {
+        "description": "Native iOS 26 app request with the WebKit/Safari TLS (20 ciphers) and native HTTP/2; captured from HelloFresh (Iterable SDK); set your app's user-agent",
+        "headers": [
+            ["accept", "*/*"],
+            ["accept-language", "en-US,en;q=0.9"],
+            ["accept-encoding", "gzip, deflate, br"],
+        ],
+        "header_order": [
+            "content-type", "accept", "authorization", "priority", "accept-language",
+            "accept-encoding", "content-length", "user-agent",
+        ],
+    },
     "IOS-26-native-apple": {
         "description": "Native iOS 26 app (NSURLSession/CFNetwork), captured from Uber Eats; set your app's user-agent",
         "headers": [

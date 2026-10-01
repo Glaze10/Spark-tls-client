@@ -40,8 +40,9 @@ async with spark_tls.AsyncSession("ios") as s:
 
 | name | aliases | client |
 |---|---|---|
-| `chrome-151-windows` | `chrome`, `chrome-latest` | Chrome 151, Windows |
+| `chrome-151` | `chrome`, `chrome-latest` | Chrome 151 (Windows; other platforms will be named, e.g. `chrome-151-android`) |
 | `ios-safari-26` | `ios`, `ios-safari`, `safari-ios`, `ios-latest` | Safari on iOS 26 |
+| `IOS-26-native-webkit-tls` | `ios-webkit-tls` | Native iOS 26 request using the Safari/WebKit TLS (20 ciphers) with native HTTP/2. Seen from HelloFresh's Iterable SDK. No default user-agent |
 | `IOS-26-native-apple` | `ios-native`, `native-ios`, `ios-app` | Native iOS 26 app (NSURLSession/CFNetwork). No default user-agent: set your app's |
 
 Safari and native apps are **not** the same fingerprint on iOS: native NSURLSession
@@ -97,7 +98,7 @@ Tests: `go test ./...` (offline, local h2/h1 server) and `pytest python/tests`
 
 ```json
 {
-  "name": "chrome-151-windows",
+  "name": "chrome-151",
   "tls": {"raw_client_hello": "<base64 TLS record>", "permute": true},
   "http2": {
     "settings": [{"id": 1, "value": 65536}, {"id": 2, "value": 0}, ...],
