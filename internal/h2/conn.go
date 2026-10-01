@@ -36,6 +36,10 @@ const (
 // ErrConnClosed means the connection can't take new streams; dial a new one.
 var ErrConnClosed = errors.New("h2: connection closed")
 
+// ErrNotProcessed means the server promised it never acted on the request (GOAWAY
+// past it, or REFUSED_STREAM), so sending it again on a new connection is safe.
+var ErrNotProcessed = errors.New("h2: request not processed by server")
+
 // Header is one header field, order preserved.
 type Header struct{ Name, Value string }
 
@@ -543,7 +547,11 @@ func (c *Conn) handle(f http2.Frame) error {
 
 	case *http2.RSTStreamFrame:
 		if st := c.stream(f.StreamID); st != nil {
-			c.endStream(st, http2.StreamError{StreamID: f.StreamID, Code: f.ErrCode})
+			var err error = http2.StreamError{StreamID: f.StreamID, Code: f.ErrCode}
+			if f.ErrCode == http2.ErrCodeRefusedStream {
+				err = fmt.Errorf("%w (REFUSED_STREAM)", ErrNotProcessed)
+			}
+			c.endStream(st, err)
 		}
 
 	case *http2.GoAwayFrame:
@@ -558,7 +566,7 @@ func (c *Conn) handle(f http2.Frame) error {
 		c.cond.Broadcast()
 		c.mu.Unlock()
 		for _, st := range orphans {
-			c.endStream(st, fmt.Errorf("h2: server sent GOAWAY (%v); request not processed", f.ErrCode))
+			c.endStream(st, fmt.Errorf("%w (GOAWAY %v)", ErrNotProcessed, f.ErrCode))
 		}
 
 	case *http2.PushPromiseFrame:

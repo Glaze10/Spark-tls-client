@@ -318,13 +318,23 @@ func (c *Client) once(ctx context.Context, p *profile.Profile, method string, u 
 	var hresp *h2.Response
 	var proto string
 	var err error
-	for attempt := 0; attempt < 2; attempt++ {
+	// Not-processed retries are bounded by ctx's deadline; the cap is only a guard
+	// against a server that GOAWAYs every connection before answering anything.
+	for attempt := 0; attempt < 64; attempt++ {
 		var reused bool
 		hresp, proto, reused, err = c.roundTrip(ctx, p, u.Scheme, host, port, hreq)
-		if err == nil || !reused || ctx.Err() != nil {
+		if err == nil || ctx.Err() != nil {
 			break
 		}
-		// A pooled connection the server had already dropped; one fresh try.
+		// Retry when the server guaranteed it never saw the request, or once when a
+		// pooled connection turned out to be dead. Anything else may have reached the
+		// server and is not ours to repeat.
+		if errors.Is(err, h2.ErrNotProcessed) || errors.Is(err, h2.ErrConnClosed) {
+			continue
+		}
+		if !reused || attempt > 0 {
+			break
+		}
 	}
 	if err != nil {
 		return nil, err
