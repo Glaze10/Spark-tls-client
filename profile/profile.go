@@ -179,6 +179,7 @@ func Parse(data []byte, fallbackName string) (*Profile, error) {
 	if p.Name == "" {
 		p.Name = fallbackName
 	}
+	inheritPriority(p)
 	return p, p.Validate()
 }
 

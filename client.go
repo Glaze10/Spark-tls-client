@@ -180,6 +180,19 @@ func (c *Client) resolveProfile(name string) (*profile.Profile, error) {
 	if p, ok := profile.Lookup(name); ok {
 		return p, nil
 	}
+	if profile.IsToken(name) {
+		p, err := profile.FromToken(name)
+		if err != nil {
+			return nil, err
+		}
+		// Registered under the token itself so a repeat lookup skips decoding, and
+		// under its own name so requests can switch to it by name.
+		c.mu.Lock()
+		c.profiles[name] = p
+		c.mu.Unlock()
+		c.AddProfile(p)
+		return p, nil
+	}
 	if data, err := os.ReadFile(name); err == nil {
 		p, err := profile.Parse(data, strings.TrimSuffix(name, ".json"))
 		if err != nil {

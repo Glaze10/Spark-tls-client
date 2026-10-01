@@ -27,6 +27,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"net/url"
@@ -65,7 +66,8 @@ type sessionOpts struct {
 	NoCookies    bool            `json:"no_cookies"`
 	Headers      *[][2]string    `json:"headers"`
 	ForceHTTP1   bool            `json:"force_http1"`
-	// Extra profiles a request may switch to by name.
+	// Extra profiles a request may switch to by name. Each is a profile object, a
+	// spark1: token, or {"alias": name, "profile": either of those}.
 	Profiles []json.RawMessage `json:"profiles"`
 }
 
@@ -138,7 +140,7 @@ func SparkSessionNew(optsJSON *C.char) *C.char {
 		return errOut(err)
 	}
 	for _, raw := range o.Profiles {
-		p, err := profile.Parse(unwrapJSON(raw), "extra")
+		p, err := parseExtra(raw)
 		if err != nil {
 			c.Close()
 			return errOut(err)
@@ -151,6 +153,36 @@ func SparkSessionNew(optsJSON *C.char) *C.char {
 	sessMu.Unlock()
 	p := c.Profile()
 	return jsonOut(map[string]any{"id": id, "profile": p.Name, "headers": p.Headers})
+}
+
+func parseExtra(raw json.RawMessage) (*profile.Profile, error) {
+	var aliased struct {
+		Alias   string          `json:"alias"`
+		Profile json.RawMessage `json:"profile"`
+	}
+	if json.Unmarshal(raw, &aliased) == nil && aliased.Alias != "" {
+		p, err := parseOne(aliased.Profile)
+		if err != nil {
+			return nil, fmt.Errorf("profile %q: %w", aliased.Alias, err)
+		}
+		cp := *p
+		cp.Name = aliased.Alias
+		return &cp, nil
+	}
+	return parseOne(raw)
+}
+
+func parseOne(raw json.RawMessage) (*profile.Profile, error) {
+	var s string
+	if json.Unmarshal(raw, &s) == nil && profile.IsToken(s) {
+		return profile.FromToken(s)
+	}
+	if json.Unmarshal(raw, &s) == nil {
+		if p, ok := profile.Lookup(s); ok {
+			return p, nil
+		}
+	}
+	return profile.Parse(unwrapJSON(raw), "extra")
 }
 
 // unwrapJSON accepts a profile as a JSON object or as a JSON string holding one.
@@ -242,7 +274,15 @@ func do(ctx context.Context, id *C.char, reqJSON, body []byte) []byte {
 			NoRedirects:      r.NoRedirects,
 		})
 		if err != nil {
-			return responseMeta{Error: err.Error(), ErrorKind: errorKind(ctx, err)}, nil
+			kind := errorKind(ctx, err)
+			msg := err.Error()
+			if kind == "timeout" && errors.Is(err, context.DeadlineExceeded) {
+				msg = "request timed out"
+				if r.TimeoutMS > 0 {
+					msg = fmt.Sprintf("request timed out after %gs", float64(r.TimeoutMS)/1000)
+				}
+			}
+			return responseMeta{Error: msg, ErrorKind: kind}, nil
 		}
 		return responseMeta{
 			Status: resp.StatusCode, Proto: resp.Proto, URL: resp.URL,

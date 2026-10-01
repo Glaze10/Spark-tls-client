@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 import json as _json
 from collections.abc import MutableMapping
 from typing import Any, Dict, Iterable, Iterator, List, Mapping, Optional, Tuple, Union
@@ -69,6 +70,16 @@ class HeaderDict(MutableMapping):
         return [list(i) for i in self._items]
 
 
+def _profile_value(v: Any) -> Any:
+    """A profile as the native side takes it: dict, token or name as-is; a file read in."""
+    if isinstance(v, dict) or not isinstance(v, str) or v.startswith("spark1:"):
+        return v
+    if os.path.isfile(v):
+        with open(v, "rb") as f:
+            return _json.loads(f.read())
+    return v
+
+
 class _BaseSession:
     def __init__(
         self,
@@ -83,16 +94,18 @@ class _BaseSession:
         decompress: bool = True,
         cookies: bool = True,
         http1: bool = False,
-        profiles: Optional[List[Union[str, Dict[str, Any]]]] = None,
+        profiles: Union[List[Any], Dict[str, Any], None] = None,
     ):
         """
-        profile   built-in name ("chrome", "ios", ...), a path to a profile JSON (Spark-Tls
-                  or a Cloak export), or a profile dict.
+        profile   built-in name ("chrome", "ios", ...), a "spark1:..." string from Cloak's
+                  Copy TLS, a path to a profile JSON (Spark-Tls or a Cloak export), or a
+                  profile dict.
         proxy     http://user:pass@host:port, socks5://..., or host:port:user:pass.
         headers   replaces the profile's default headers. Edit session.headers later to
                   change them; order is kept.
-        profiles  extra profiles (dicts or file paths) a request can switch to by name,
-                  e.g. when an app flow opens a webview.
+        profiles  extra profiles a request can switch to with profile="name", e.g. when an
+                  app flow opens a webview. A dict names them: {"webview": "spark1:..."};
+                  a list keeps each profile's own name. Values take any form `profile` does.
         """
         opts: Dict[str, Any] = {
             "proxy": proxy or "",
@@ -108,14 +121,10 @@ class _BaseSession:
             opts["profile_json"] = profile
         else:
             opts["profile"] = profile or "chrome"
-        extra = []
-        for p in profiles or []:
-            if isinstance(p, dict):
-                extra.append(p)
-            else:
-                with open(p, "rb") as f:
-                    extra.append(_json.loads(f.read()))
-        opts["profiles"] = extra
+        if isinstance(profiles, dict):
+            opts["profiles"] = [{"alias": k, "profile": _profile_value(v)} for k, v in profiles.items()]
+        else:
+            opts["profiles"] = [_profile_value(v) for v in profiles or []]
 
         info = _native.session_new(opts)
         self._sid: Optional[bytes] = info["id"].encode()

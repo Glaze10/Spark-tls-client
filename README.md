@@ -43,6 +43,18 @@ async with spark_tls.AsyncSession("ios") as s:
 | `chrome-151-windows` | `chrome`, `chrome-latest` | Chrome 151, Windows |
 | `ios-26` | `ios`, `ios-latest`, `safari-ios` | iOS 26 system stack (Safari, WKWebView, NSURLSession apps) |
 
+**Copy TLS from Cloak:** right-click any flow → *Copy TLS (Spark-Tls)*. You get one
+string (`spark1:…`, ~800 chars) holding that client's ClientHello, HTTP/2 opening and
+identity headers (user-agent, accept-language, accept-encoding, client hints):
+
+```python
+s = spark_tls.Session("spark1:eJy...")                       # be that app
+s = spark_tls.Session("ios", profiles={"webview": "spark1:eJy..."})
+s.get(url, profile="webview")                                # switch mid-flow, same cookies
+```
+
+`sparktls token -profile <name|file>` prints any profile in the same form.
+
 `Session(profile=...)` also takes a path to a profile JSON — including a fingerprint
 exported from Cloak (Proxy → Settings → Custom TLS → Export) — or a dict.
 

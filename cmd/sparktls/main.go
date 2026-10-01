@@ -4,6 +4,7 @@
 //	sparktls check [-profile chrome] [-proxy url]
 //	sparktls get [-profile ios] [-H "name: value"]... URL
 //	sparktls profiles
+//	sparktls token -profile <name|file>     print the profile as a pasteable spark1: string
 package main
 
 import (
@@ -54,6 +55,19 @@ func main() {
 			p, _ := profile.Lookup(n)
 			fmt.Printf("%-22s %s\n", n, p.Description)
 		}
+		return
+	case "token":
+		c, err := sparktls.NewClient(sparktls.Options{Profile: *prof})
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		tok, err := c.Profile().Token()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		fmt.Println(tok)
 		return
 	case "check":
 		fs.Parse(append(args, "https://tls.peet.ws/api/all"))
