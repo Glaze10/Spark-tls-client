@@ -26,6 +26,7 @@ var aliases = map[string]string{
 	"ddg-ios":            "ios-26-duckduckgo",
 	"edge-ios":           "ios-26-edge-153",
 	"bing-ios":           "ios-26-bing-34",
+	"opera-ios":          "ios-26-opera-6",
 	"ios":                "ios-safari-26",
 	"ios-latest":         "ios-safari-26",
 	"safari-ios":         "ios-safari-26",

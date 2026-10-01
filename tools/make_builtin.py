@@ -58,6 +58,10 @@ TOKENS = {
         "description": "Microsoft Bing app 34 on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
         "use_captured_headers": True,
     },
+    "IOS-26-opera-6": {
+        "description": "Opera 6.7 on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
+        "use_captured_headers": True,
+    },
     "IOS-26-chrome-155": {
         "description": "Chrome 155 on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
         "use_captured_headers": True,

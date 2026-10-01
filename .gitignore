@@ -14,3 +14,4 @@ dist/
 examples.py
 *.fingerprint.json
 captures.txt
+pt.log
