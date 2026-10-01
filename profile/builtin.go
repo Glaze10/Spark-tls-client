@@ -19,9 +19,9 @@ var aliases = map[string]string{
 	"ios-latest":    "ios-safari-26",
 	"safari-ios":    "ios-safari-26",
 	"ios-safari":    "ios-safari-26",
-	"ios-native":    "ios-native-26",
-	"native-ios":    "ios-native-26",
-	"ios-app":       "ios-native-26",
+	"ios-native":    "ios-26.0-native-apple",
+	"native-ios":    "ios-26.0-native-apple",
+	"ios-app":       "ios-26.0-native-apple",
 }
 
 func init() {
@@ -39,6 +39,7 @@ func init() {
 		if err != nil {
 			panic("builtin profile " + name + ": " + err.Error())
 		}
-		builtin[p.Name] = p
+		// Keyed lowercase so lookups are case-insensitive; p.Name keeps its display case.
+		builtin[strings.ToLower(p.Name)] = p
 	}
 }

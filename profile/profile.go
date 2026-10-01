@@ -212,7 +212,7 @@ func parseCloak(raw json.RawMessage) (*Profile, error) {
 	}
 	// The capture has no H2 block when the client's opening wasn't seen; borrow the
 	// base preset's if we ship it, since the base was chosen from the same client.
-	if base, ok := builtin[c.BasedOn]; ok && base.H2 != nil {
+	if base, ok := builtin[strings.ToLower(c.BasedOn)]; ok && base.H2 != nil {
 		h := *base.H2
 		p.H2 = &h
 		p.Headers = base.Headers
@@ -256,8 +256,8 @@ func Lookup(name string) (*Profile, bool) {
 // Names lists the built-in profiles.
 func Names() []string {
 	out := make([]string, 0, len(builtin))
-	for n := range builtin {
-		out = append(out, n)
+	for _, p := range builtin {
+		out = append(out, p.Name)
 	}
 	return out
 }
