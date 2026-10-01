@@ -88,9 +88,13 @@ def test_cloak_export_loads(path):
 def test_async_gather():
     async def main():
         async with spark_tls.AsyncSession("chrome") as s:
-            rs = await asyncio.gather(*[s.get(f"{HTTPBIN}/get?i={i}") for i in range(25)])
-            return [r.json()["args"]["i"] for r in rs]
-    assert asyncio.run(main()) == [str(i) for i in range(25)]
+            return await asyncio.gather(*[s.get(f"{HTTPBIN}/get?i={i}") for i in range(25)])
+    rs = asyncio.run(main())
+    # httpbin.org answers bursts with an occasional 502/503 page; that's its
+    # capacity, not ours, so don't let it fail the client's test.
+    if any(r.status_code >= 500 for r in rs):
+        pytest.skip(f"httpbin overloaded: {sorted({r.status_code for r in rs})}")
+    assert [r.json()["args"]["i"] for r in rs] == [str(i) for i in range(25)]
 
 
 def test_async_cancel():

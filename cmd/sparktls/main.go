@@ -53,7 +53,7 @@ func main() {
 		sort.Strings(names)
 		for _, n := range names {
 			p, _ := profile.Lookup(n)
-			fmt.Printf("%-22s %s\n", n, p.Description)
+			fmt.Printf("%-26s %s\n", n, p.Description)
 		}
 		return
 	case "token":
