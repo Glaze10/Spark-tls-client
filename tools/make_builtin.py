@@ -21,12 +21,6 @@ CHROME_ORDER = [
     "sec-fetch-dest", "referer", "if-none-match", "if-modified-since",
     "accept-encoding", "accept-language", "cookie", "priority",
 ]
-APPLE_ORDER = [
-    "sec-fetch-dest", "content-type", "accept", "user-agent", "sec-fetch-site",
-    "sec-fetch-mode", "accept-language", "priority", "accept-encoding",
-    "sec-fetch-user", "referer", "cookie", "content-length", "origin",
-]
-
 PROFILES = {
     "chrome-151": {
         "hello": "chrome-151-windows",
@@ -50,25 +44,6 @@ PROFILES = {
         ],
         "header_order": CHROME_ORDER,
     },
-    "ios-safari-26": {
-        "hello": "apple-ios-device",
-        "description": "Safari on iOS 26",
-        "permute": False,
-        "http2": {
-            "settings": [{"id": 2, "value": 0}, {"id": 3, "value": 100},
-                         {"id": 4, "value": 2097152}, {"id": 9, "value": 1}],
-            "connection_window_update": 10420225,
-            "pseudo_order": [":method", ":scheme", ":authority", ":path"],
-            "header_priority": None,
-        },
-        "headers": [
-            ["accept", "*/*"],
-            ["user-agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 26_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1"],
-            ["accept-language", "en-US,en;q=0.9"],
-            ["accept-encoding", "gzip, deflate, br"],
-        ],
-        "header_order": APPLE_ORDER,
-    },
 }
 
 
@@ -76,6 +51,21 @@ PROFILES = {
 # Headers are replaced with app-neutral defaults: every app sets its own
 # user-agent, so none is shipped.
 TOKENS = {
+    # Real Safari, browsing m.youtube.com. Safari on iOS 26 freezes the OS version
+    # in its user-agent at 18_6; only Version/26.0 shows the real release.
+    "ios-safari-26": {
+        "description": "Safari on iOS 26",
+        "headers": [
+            ["user-agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1"],
+            ["accept", "*/*"],
+            ["accept-language", "en-US,en;q=0.9"],
+            ["accept-encoding", "gzip, deflate, br"],
+        ],
+        "header_order": [
+            "sec-fetch-dest", "user-agent", "accept", "referer", "sec-fetch-site",
+            "sec-fetch-mode", "accept-language", "priority", "accept-encoding", "cookie",
+        ],
+    },
     "IOS-26-native-webkit-tls": {
         "description": "Native iOS 26 app request with the WebKit/Safari TLS (20 ciphers) and native HTTP/2; captured from HelloFresh (Iterable SDK); set your app's user-agent",
         "headers": [
