@@ -14,11 +14,11 @@ randoms, keys and GREASE per connection. A newer browser = a new capture, no cod
 ```python
 import spark_tls
 
-with spark_tls.Session("chrome", proxy="host:port:user:pass") as s:
+with spark_tls.Session(spark_tls.chrome_151, proxy="host:port:user:pass") as s:
     r = s.post("https://api.example.com/login", json={"u": "x"})
     print(r.status_code, r.http_version, r.json())
 
-async with spark_tls.AsyncSession("ios") as s:
+async with spark_tls.AsyncSession(spark_tls.ios26.native_apple) as s:
     rs = await asyncio.gather(*(s.get(u) for u in urls))
 ```
 
@@ -37,6 +37,10 @@ async with spark_tls.AsyncSession("ios") as s:
 - Errors: `Timeout`, `ProxyError`, `TLSError`, `ConnectError` (all `RequestError`).
 
 ### Profiles
+
+Every built-in is an attribute, so your editor lists them as you type:
+`spark_tls.chrome_151`, `spark_tls.ios26.<...>` (`safari`, `native_apple`,
+`webview_apple`, `chrome_155`, ...). Plain names and the shortcuts below work too.
 
 | name | aliases | client |
 |---|---|---|
