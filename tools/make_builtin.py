@@ -76,7 +76,7 @@ PROFILES = {
 # Headers are replaced with app-neutral defaults: every app sets its own
 # user-agent, so none is shipped.
 TOKENS = {
-    "IOS-26.0-native-apple": {
+    "IOS-26-native-apple": {
         "description": "Native iOS 26 app (NSURLSession/CFNetwork), captured from Uber Eats; set your app's user-agent",
         "headers": [
             ["accept", "*/*"],

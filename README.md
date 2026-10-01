@@ -42,7 +42,7 @@ async with spark_tls.AsyncSession("ios") as s:
 |---|---|---|
 | `chrome-151-windows` | `chrome`, `chrome-latest` | Chrome 151, Windows |
 | `ios-safari-26` | `ios`, `ios-safari`, `safari-ios`, `ios-latest` | Safari on iOS 26 |
-| `IOS-26.0-native-apple` | `ios-native`, `native-ios`, `ios-app` | Native iOS 26 app (NSURLSession/CFNetwork). No default user-agent: set your app's |
+| `IOS-26-native-apple` | `ios-native`, `native-ios`, `ios-app` | Native iOS 26 app (NSURLSession/CFNetwork). No default user-agent: set your app's |
 
 Safari and native apps are **not** the same fingerprint on iOS: native NSURLSession
 drops 7 legacy ciphers and orders its HTTP/2 SETTINGS, window and pseudo-headers
