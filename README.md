@@ -42,9 +42,18 @@ async with spark_tls.AsyncSession("ios") as s:
 |---|---|---|
 | `chrome-151` | `chrome`, `chrome-latest` | Chrome 151 (Windows; other platforms will be named, e.g. `chrome-151-android`) |
 | `ios-safari-26` | `ios`, `ios-safari`, `safari-ios`, `ios-latest` | Safari on iOS 26 |
+| `IOS-26-chrome-155` | `chrome-ios` | Chrome 155 on iOS 26 |
+| `IOS-26-firefox-157` | `firefox-ios` | Firefox 157 on iOS 26 |
+| `IOS-26-brave` | `brave-ios` | Brave on iOS 26 |
+| `IOS-26-duckduckgo` | `duckduckgo-ios`, `ddg-ios` | DuckDuckGo browser on iOS 26 |
+| `IOS-26-edge-153` | `edge-ios` | Edge 153 on iOS 26 |
 | `IOS-26-webview-apple` | `ios-webview` | In-app webview on iOS 26 (WKWebView). Native TLS + HTTP/2 (not Safari's), webview user-agent. Seen in Uber and DoorDash login pages |
 | `IOS-26-native-webkit-tls` | `ios-webkit-tls` | Native iOS 26 request using the Safari/WebKit TLS (20 ciphers) with native HTTP/2. Seen from HelloFresh's Iterable SDK. No default user-agent |
 | `IOS-26-native-apple` | `ios-native`, `native-ios`, `ios-app` | Native iOS 26 app (NSURLSession/CFNetwork). No default user-agent: set your app's |
+
+All iOS browser apps (Chrome, Firefox, Brave, DuckDuckGo, Edge) send one shared
+TLS + HTTP/2 fingerprint (Safari's TLS, native HTTP/2); their profiles differ only
+in user-agent and header order.
 
 Safari and native apps are **not** the same fingerprint on iOS: native NSURLSession
 drops 7 legacy ciphers and orders its HTTP/2 SETTINGS, window and pseudo-headers

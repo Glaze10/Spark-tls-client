@@ -51,6 +51,29 @@ PROFILES = {
 # Headers are replaced with app-neutral defaults: every app sets its own
 # user-agent, so none is shipped.
 TOKENS = {
+    # Browser apps on iOS. All five share one fingerprint - Safari's 20-cipher TLS
+    # with the native HTTP/2 opening, i.e. IOS-26-native-webkit-tls - and differ
+    # only in headers, so each keeps the headers and order it was captured with.
+    "IOS-26-chrome-155": {
+        "description": "Chrome 155 on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
+        "use_captured_headers": True,
+    },
+    "IOS-26-firefox-157": {
+        "description": "Firefox 157 on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
+        "use_captured_headers": True,
+    },
+    "IOS-26-brave": {
+        "description": "Brave on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
+        "use_captured_headers": True,
+    },
+    "IOS-26-duckduckgo": {
+        "description": "DuckDuckGo browser on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
+        "use_captured_headers": True,
+    },
+    "IOS-26-edge-153": {
+        "description": "Edge 153 on iOS 26 (WebKit: same TLS + HTTP/2 as every iOS browser app, own user-agent)",
+        "use_captured_headers": True,
+    },
     # An in-app webview (WKWebView): Uber's account.uber.com login page. On iOS 26
     # webviews use the app's native TLS and HTTP/2, not Safari's; DoorDash's login
     # webview matched too. Headers are in the order the webview sent them.
@@ -119,6 +142,33 @@ def from_token(path):
     return json.loads(zlib.decompress(base64.urlsafe_b64decode(body + "=" * (-len(body) % 4))))
 
 
+def fill_pseudo_order(p, others):
+    """A capture sometimes misses the pseudo-header order (the HEADERS frame hadn't
+    arrived when Cloak looked). The same SETTINGS and window means the same HTTP/2
+    stack, so take the order from a capture of that stack that has it."""
+    h2 = p.get("http2") or {}
+    if len(h2.get("pseudo_order") or []) == 4:
+        return
+    for o in others:
+        oh = o.get("http2") or {}
+        if (len(oh.get("pseudo_order") or []) == 4 and oh.get("settings") == h2.get("settings")
+                and oh.get("connection_window_update") == h2.get("connection_window_update")):
+            h2["pseudo_order"] = oh["pseudo_order"]
+            return
+    raise SystemExit(f"{p.get('name')}: no pseudo-header order and no matching capture to take it from")
+
+
+def captured_headers(p):
+    """The capture's own identity headers plus accept: */*, in the client's order."""
+    order = p.get("header_order") or []
+    headers = list(p.get("headers") or [])
+    if not any(k == "accept" for k, _ in headers):
+        headers.append(["accept", "*/*"])
+    rank = {n: i for i, n in enumerate(order)}
+    headers.sort(key=lambda h: rank.get(h[0], len(order)))
+    return headers, order
+
+
 def main(src):
     hellos = json.loads(Path(src).read_text())
     OUT.mkdir(parents=True, exist_ok=True)
@@ -135,11 +185,18 @@ def main(src):
         }
         (OUT / f"{name}.json").write_text(json.dumps(doc, indent=2) + "\n")
         print("wrote", name)
+    captures = {name: from_token(Path(__file__).resolve().parent / "captures" / f"{name}.spark")
+                for name in TOKENS}
+    for p in captures.values():
+        fill_pseudo_order(p, captures.values())
     for name, extra in TOKENS.items():
-        p = from_token(Path(__file__).resolve().parent / "captures" / f"{name}.spark")
+        p = captures[name]
+        if extra.get("use_captured_headers"):
+            headers, order = captured_headers(p)
+        else:
+            headers, order = extra["headers"], extra["header_order"]
         doc = {"name": name, "description": extra["description"], "tls": p["tls"],
-               "http2": p["http2"], "headers": extra["headers"],
-               "header_order": extra["header_order"]}
+               "http2": p["http2"], "headers": headers, "header_order": order}
         (OUT / f"{name}.json").write_text(json.dumps(doc, indent=2) + "\n")
         print("wrote", name, "(from Copy TLS capture)")
 

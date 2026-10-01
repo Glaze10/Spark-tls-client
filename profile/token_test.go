@@ -25,3 +25,26 @@ func TestTokenRoundTrip(t *testing.T) {
 		t.Fatalf("priority not inherited from matching settings: %+v", p.H2.HeaderPriority)
 	}
 }
+
+func TestMissingPseudoOrderInherited(t *testing.T) {
+	native, ok := Lookup("native-ios")
+	if !ok {
+		t.Fatal("native-ios missing")
+	}
+	c := *native
+	h2 := *native.H2
+	h2.PseudoOrder = nil // the capture missed the first HEADERS frame
+	c.H2 = &h2
+	c.Name = "no-pseudo"
+	tok, err := c.Token()
+	if err != nil {
+		t.Fatal(err)
+	}
+	p, err := FromToken(tok)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := p.PseudoOrder(); len(got) != 4 || got[2] != ":path" || got[3] != ":authority" {
+		t.Fatalf("want the native stack's m,s,p,a; got %v", got)
+	}
+}

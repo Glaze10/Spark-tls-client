@@ -56,6 +56,23 @@ func (p *Profile) Token() (string, error) {
 	return TokenPrefix + base64.RawURLEncoding.EncodeToString(buf.Bytes()), nil
 }
 
+// inheritPseudoOrder fills in a missing pseudo-header order from a built-in with
+// the same SETTINGS and window: the same HTTP/2 stack. Without it the default
+// (Chrome's m,a,s,p) would be sent, which is wrong for anything else.
+func inheritPseudoOrder(p *Profile) {
+	if p.H2 == nil || len(p.H2.PseudoOrder) == 4 || len(p.H2.Settings) == 0 {
+		return
+	}
+	for _, b := range builtin {
+		if b.H2 != nil && len(b.H2.PseudoOrder) == 4 &&
+			b.H2.ConnectionWindowUpdate == p.H2.ConnectionWindowUpdate &&
+			reflect.DeepEqual(b.H2.Settings, p.H2.Settings) {
+			p.H2.PseudoOrder = append([]string(nil), b.H2.PseudoOrder...)
+			return
+		}
+	}
+}
+
 // inheritPriority fills in the HEADERS priority block from a built-in with the same
 // HTTP/2 settings. A capture records SETTINGS but not the priority flags on the
 // first HEADERS frame; an identical SETTINGS frame means the same HTTP/2 stack, and

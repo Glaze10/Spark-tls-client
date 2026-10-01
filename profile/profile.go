@@ -180,6 +180,7 @@ func Parse(data []byte, fallbackName string) (*Profile, error) {
 		p.Name = fallbackName
 	}
 	inheritPriority(p)
+	inheritPseudoOrder(p)
 	return p, p.Validate()
 }
 
