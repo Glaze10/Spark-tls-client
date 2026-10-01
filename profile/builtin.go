@@ -19,6 +19,9 @@ var aliases = map[string]string{
 	"ios-latest":    "ios-safari-26",
 	"safari-ios":    "ios-safari-26",
 	"ios-safari":    "ios-safari-26",
+	"ios-native":    "ios-native-26",
+	"native-ios":    "ios-native-26",
+	"ios-app":       "ios-native-26",
 }
 
 func init() {

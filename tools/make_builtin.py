@@ -52,7 +52,7 @@ PROFILES = {
     },
     "ios-safari-26": {
         "hello": "apple-ios-device",
-        "description": "Safari on iOS 26 (Apple's networking stack, same TLS as WKWebView and NSURLSession apps)",
+        "description": "Safari on iOS 26",
         "permute": False,
         "http2": {
             "settings": [{"id": 2, "value": 0}, {"id": 3, "value": 100},
@@ -72,6 +72,34 @@ PROFILES = {
 }
 
 
+# Copied with Cloak's Copy TLS from a real device (tools/captures/<name>.spark).
+# Headers are replaced with app-neutral defaults: every app sets its own
+# user-agent, so none is shipped.
+TOKENS = {
+    "ios-native-26": {
+        "description": "Native iOS 26 app (NSURLSession/CFNetwork), captured from Uber Eats; set your app's user-agent",
+        "headers": [
+            ["accept", "*/*"],
+            ["accept-encoding", "gzip, deflate, br"],
+            ["accept-language", "en-US;q=1"],
+        ],
+        "header_order": [
+            "accept", "content-length", "user-agent", "accept-encoding", "cookie",
+            "priority", "accept-language", "content-type", "authorization",
+        ],
+    },
+}
+
+
+def from_token(path):
+    import base64
+    import zlib
+    tok = Path(path).read_text().strip()
+    assert tok.startswith("spark1:"), path
+    body = tok[len("spark1:"):]
+    return json.loads(zlib.decompress(base64.urlsafe_b64decode(body + "=" * (-len(body) % 4))))
+
+
 def main(src):
     hellos = json.loads(Path(src).read_text())
     OUT.mkdir(parents=True, exist_ok=True)
@@ -88,6 +116,13 @@ def main(src):
         }
         (OUT / f"{name}.json").write_text(json.dumps(doc, indent=2) + "\n")
         print("wrote", name)
+    for name, extra in TOKENS.items():
+        p = from_token(Path(__file__).resolve().parent / "captures" / f"{name}.spark")
+        doc = {"name": name, "description": extra["description"], "tls": p["tls"],
+               "http2": p["http2"], "headers": extra["headers"],
+               "header_order": extra["header_order"]}
+        (OUT / f"{name}.json").write_text(json.dumps(doc, indent=2) + "\n")
+        print("wrote", name, "(from Copy TLS capture)")
 
 
 if __name__ == "__main__":

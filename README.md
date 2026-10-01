@@ -41,7 +41,12 @@ async with spark_tls.AsyncSession("ios") as s:
 | name | aliases | client |
 |---|---|---|
 | `chrome-151-windows` | `chrome`, `chrome-latest` | Chrome 151, Windows |
-| `ios-safari-26` | `ios`, `ios-safari`, `safari-ios`, `ios-latest` | Safari on iOS 26 (same TLS as WKWebView / NSURLSession apps) |
+| `ios-safari-26` | `ios`, `ios-safari`, `safari-ios`, `ios-latest` | Safari on iOS 26 |
+| `ios-native-26` | `ios-native`, `native-ios`, `ios-app` | Native iOS 26 app (NSURLSession/CFNetwork). No default user-agent: set your app's |
+
+Safari and native apps are **not** the same fingerprint on iOS: native NSURLSession
+drops 7 legacy ciphers and orders its HTTP/2 SETTINGS, window and pseudo-headers
+differently. Use the one matching the traffic you captured.
 
 **Copy TLS from Cloak:** right-click any flow → *Copy TLS (Spark-Tls)*. You get one
 string (`spark1:…`, ~800 chars) holding that client's ClientHello, HTTP/2 opening and

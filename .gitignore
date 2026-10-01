@@ -12,3 +12,4 @@ dist/
 
 # personal scratch / examples
 examples.py
+*.fingerprint.json
