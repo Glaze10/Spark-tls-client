@@ -16,8 +16,8 @@ import (
 	"sort"
 	"strings"
 
-	sparktls "github.com/leosm/spark-tls"
-	"github.com/leosm/spark-tls/profile"
+	sparktls "github.com/Glaze10/Spark-tls-client"
+	"github.com/Glaze10/Spark-tls-client/profile"
 )
 
 type headerFlags [][2]string

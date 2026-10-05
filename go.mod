@@ -1,4 +1,4 @@
-module github.com/leosm/spark-tls
+module github.com/Glaze10/Spark-tls-client
 
 go 1.26.0
 

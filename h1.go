@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/leosm/spark-tls/internal/h2"
+	"github.com/Glaze10/Spark-tls-client/internal/h2"
 )
 
 // h1Conn is a keep-alive HTTP/1.1 connection. Headers go out exactly as given,

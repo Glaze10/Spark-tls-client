@@ -15,3 +15,6 @@ examples.py
 *.fingerprint.json
 captures.txt
 pt.log
+
+# research / capture tooling (local only)
+research/

@@ -24,7 +24,7 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/hpack"
 
-	"github.com/leosm/spark-tls/profile"
+	"github.com/Glaze10/Spark-tls-client/profile"
 )
 
 const (

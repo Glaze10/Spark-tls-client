@@ -19,8 +19,8 @@ import (
 
 	"golang.org/x/net/publicsuffix"
 
-	"github.com/leosm/spark-tls/internal/h2"
-	"github.com/leosm/spark-tls/profile"
+	"github.com/Glaze10/Spark-tls-client/internal/h2"
+	"github.com/Glaze10/Spark-tls-client/profile"
 )
 
 type Options struct {

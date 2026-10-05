@@ -13,7 +13,7 @@ import (
 	utls "github.com/refraction-networking/utls"
 	"golang.org/x/net/proxy"
 
-	"github.com/leosm/spark-tls/profile"
+	"github.com/Glaze10/Spark-tls-client/profile"
 )
 
 // dialTCP opens a raw connection to addr, through the proxy when one is set.

@@ -142,5 +142,7 @@ dial.go           TCP / HTTP CONNECT / SOCKS5, utls handshake from the captured 
 h1.go             HTTP/1.1 with exact header order and case
 ffi/              C shared library for Python (sync call + async callback)
 python/spark_tls  Session, AsyncSession
-tools/make_builtin.py  regenerate built-ins from fresh captures
 ```
+
+Built-in profiles ship pre-generated in `profile/builtin/`. The capture-to-profile
+tooling and raw `.spark` captures are kept out of the repo (local `research/`).
